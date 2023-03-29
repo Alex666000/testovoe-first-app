@@ -42,7 +42,7 @@ export const CustomModal = (props: CustomModalPropsType) => {
         <Modal isOpen={props.isOpen} style={customStyles}>
             <Block flexDirection={"column"} justifyContent>
                 Введите текст вопроса
-                <input value={inputValue} onChange={props.changeInputValueHandler}/>
+                <input value={inputValue} onChange={changeInputValueHandler}/>
                 <Block justifyContent={"flex-end"}>
                     <BasicButton text={"ok"}/>
                     <BasicButton text={"cancel"}/>

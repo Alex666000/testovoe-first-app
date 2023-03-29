@@ -33,6 +33,7 @@ function App() {
         setState({...state, inputValue: value})
     }, [])
 
+    // проверяем наш локальный редюсер
     useEffect(() => {
         console.log(state, "state")
     }, [state])
