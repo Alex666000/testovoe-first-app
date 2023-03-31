@@ -1,58 +1,72 @@
-import React, {useCallback, useEffect, useState} from "react";
-import BasicButton from "./components/BasicButton";
+import React, {useCallback, useState} from "react";
 import styled from "styled-components";
-import Modal from "react-modal";
-import CustomModal from "./components/CustomModal/CustomModal";
+import BasicButton from "./components/BasicButton";
+import CustomModal from "./components/CustomModal";
+import {AppDispatch, RootState, useAppDispatch, useAppSelector} from "./redux/store";
+import {createQuestion} from "./redux/questionSlice";
 
 
-export type StateType = {
-    inputValue: string
-}
-// какой тег юзаем div
-// далее этот контейнер используем как компоненту: css in js
 type AppContainerPropsType = {
-    padding?: string
+    marginTop: string
 }
 
 const AppContainer = styled.div<AppContainerPropsType>`
   display: flex;
-  padding: ${props => props.padding ? props.padding : " "};
+  margin-top: ${props => props.marginTop ? props.marginTop : ""};
 `;
 
 function App() {
+    const dispatch = useAppDispatch()
 
-    const [isOpen, setIsOpen] = useState(false);
+    const questionsSelector = (state: RootState) => state.questions.questions
+    const questions = useAppSelector(questionsSelector)
 
-    // state аналог редакса:
-    const [state, setState] = useState<StateType>({
-        inputValue: ""
-    });
+    const [modalIsOpen, setIsOpen] = useState(false);
 
-//  аналог редюсера - будет менять стейт
+    // const [state, setState] = useState({
+    //     initialValue: "",
+    // });
+
+    // меняем стейт - вне мбудет объект:
+    /* const [state, setState] = useState({
+         questions: []
+         ,
+     });*/
+
     const changeStateInputValue = useCallback((value: string) => {
-        setState({...state, inputValue: value})
+        // setState({...state, initialValue: value})
+        dispatch(createQuestion(value))
     }, [])
 
-    // проверяем наш локальный редюсер
-    useEffect(() => {
-        console.log(state, "state")
-    }, [state])
+    // console.log(state)
 
     const addQeustion = useCallback(() => {
         setIsOpen(true)
     }, [])
 
+    const onCloseModal = () => {
+        setIsOpen(false)
+    }
+
+
     return (
-        <AppContainer padding={"50px 20px"}>
-            <BasicButton text={"Добавить вопрос"} onClick={addQeustion}/>
-            {/*передаем padding*/}
-            <BasicButton text={"Начать текст"} padding={"0px 10px"}/>
-            <CustomModal isOpen={isOpen} changeStateInputValue={changeStateInputValue}/>
-        </AppContainer>
-    );
+        <AppContainer marginTop={"30px"}>
+            <div>
+                {/*вместо console.log(state) сделаем сущность чтобы при добавлении вопроса после введения в input она отображалась в дивке*/}
+                Текущий вопрос: {questions.map(el => el.question)}
+            </div>
+            <BasicButton text={"Добавить вопрос"} onClick={addQeustion}></BasicButton>
+            <BasicButton text={"Начать тест"}></BasicButton>
+
+            <CustomModal
+                isOpen={modalIsOpen}
+                // в любой модалке всегда есть submit
+                submitInputValue={changeStateInputValue}
+                cancelHandler={onCloseModal}/>
+
+        </AppContainer>)
 }
 
+
 export default App;
-/*
-1.11.12 мин закончили...
- */
+

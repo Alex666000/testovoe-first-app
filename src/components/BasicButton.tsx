@@ -1,31 +1,28 @@
-import React from "react";
+import React, {FC} from "react";
 import styled from "styled-components";
 
-// styled
 type StyledButtonPropsType = {
-    margin?: string
+    marginRight: string
 }
 
 const StyledButton = styled.button<StyledButtonPropsType>`
-  margin:  ${(props) => props.margin ? props.margin : ' '};
+  margin-right: ${props => props.marginRight ? props.marginRight : ""};
 `;
 
-// types
+// button type
 type BasicButtonPropsType = {
     text: string
-    // пропсы для styled делаем необязательными
-    padding?: string
     onClick?: () => void
 }
 
-const BasicButton = (props: BasicButtonPropsType) => {
+const BasicButton: FC<BasicButtonPropsType> = ({text, onClick}) => {
 
-    const onClickHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-        props.onClick && props.onClick()
+    const openModalHandler = () => {
+        onClick && onClick()
     }
 
     return (
-        <StyledButton margin={props.padding} onClick={onClickHandler}>{props.text}</StyledButton>
+        <StyledButton marginRight={"20px"} onClick={openModalHandler}>{text}</StyledButton>
     );
 };
 
